@@ -19,10 +19,10 @@
 <div class="card">
   <header><h1>AI-Ready ID (Download)</h1></header>
   <main>
-    <p>🎉 <strong>Congrats!</strong> You’ve completed the module series. Enter your Badge ID and download your portable <em>AI-Ready ID</em> (JSON).</p>
+    <p>🎉 <strong>Congratulations!</strong> You’ve completed the module series. Enter your Troy email address and download your portable <em>AI-Ready ID</em> (JSON).</p>
     <div class="row">
-      <label for="badgeId">Your Badge ID</label><br>
-      <input id="badgeId" type="text" placeholder="e.g., TROY-2025-ABC123" aria-label="Badge ID">
+      <label for="badgeId">Your Troy Email</label><br>
+      <input id="badgeId" type="email" placeholder="e.g., jdoe12345@troy.edu" aria-label="Email">
     </div>
     <button id="downloadBtn">Download AI-Ready ID (JSON)</button>
     <p class="row"><small>Tip: keep both the JSON file and the PNG badge for your records.</small></p>
@@ -47,17 +47,21 @@
 
   document.getElementById('downloadBtn').addEventListener('click', () => {
     const badgeId = (document.getElementById('badgeId').value || '').trim();
-    if (!badgeId) { alert('Please enter your Badge ID (e.g., TROY-2025-ABC123).'); return; }
+if (!badgeId) {
+  alert('Please enter your Troy email (e.g., jdoe12345@troy.edu).');
+  return;
+}
 
-    const badge = {
-      spec: "ai-ready-id/v1",
-      version: "1.0",
-      badge_id: badgeId,
-      issuer: { org: ORG, unit: UNIT, contact: CONTACT },
-      badge: { name: "AI-Ready ID", criteria: CRITERIA, issued: ISSUED, expires: null },
-      learner: { identifier_type: "registry_id", identifier: badgeId },
-      evidence: [EVIDENCE_URL]
-    };
+const badge = {
+  spec: "ai-ready-id/v1",
+  version: "1.0",
+  badge_id: badgeId,  // now uses email as ID
+  issuer: { org: ORG, unit: UNIT, contact: CONTACT },
+  badge: { name: "AI-Ready ID", criteria: CRITERIA, issued: ISSUED, expires: null },
+  learner: { identifier_type: "email", identifier: badgeId },
+  evidence: [EVIDENCE_URL]
+};
+
 
     const blob = new Blob([JSON.stringify(badge, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -68,6 +72,7 @@
     a.remove();
   });
 </script>
+
 
 
 
