@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI-Ready ID</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f8fafc}
+  .card{max-width:720px;margin:24px auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px}
+  header{background:#f9fafb;padding:.9rem 1rem;border-bottom:1px solid #e5e7eb}
+  h1{margin:0;font-size:1.25rem;color:#111827}
+  main{padding:1rem 1.25rem;color:#374151;line-height:1.5}
+  input,button{font:inherit}
+  .row{margin:.5rem 0}
+  input{width:100%;max-width:320px;padding:.5rem;border:1px solid #d1d5db;border-radius:8px}
+  button{margin-top:.75rem;padding:.6rem 1rem;border:1px solid #2563eb;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer}
+  small{color:#6b7280}
+</style>
+
+<div class="card">
+  <header><h1>AI-Ready ID (Download)</h1></header>
+  <main>
+    <p>🎉 <strong>Congrats!</strong> You’ve completed the module series. Enter your Badge ID and download your portable <em>AI-Ready ID</em> (JSON).</p>
+    <div class="row">
+      <label for="badgeId">Your Badge ID</label><br>
+      <input id="badgeId" type="text" placeholder="e.g., TROY-2025-ABC123" aria-label="Badge ID">
+    </div>
+    <button id="downloadBtn">Download AI-Ready ID (JSON)</button>
+    <p class="row"><small>Tip: keep both the JSON file and the PNG badge for your records.</small></p>
+
+    <!-- Optional image block (safe to delete if you don’t have a PNG yet) -->
+    <div class="row">
+      <img id="badgeImg" src="ai-ready-badge.png" alt="AI-Ready Badge" style="max-width:200px;display:block">
+      <a href="ai-ready-badge.png" download>Download Badge (PNG)</a>
+    </div>
+  </main>
+</div>
+
+<script>
+  // --- Edit these constants if needed ---
+  const ORG = "Troy University";
+  const UNIT = "TEC • Provost Fellows • AI Forward Initiative";
+  const CONTACT = "teaching-excellence@troy.edu";
+  const CRITERIA = "Completed the AI in Teaching & Learning module series (≥80% on quizzes and all pages complete).";
+  const ISSUED = "2025-11-05"; // change to a term date if you prefer
+  const EVIDENCE_URL = "https://example.edu/teaching-excellence/resources"; // optional info page
+  // --------------------------------------
+
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const badgeId = (document.getElementById('badgeId').value || '').trim();
+    if (!badgeId) { alert('Please enter your Badge ID (e.g., TROY-2025-ABC123).'); return; }
+
+    const badge = {
+      spec: "ai-ready-id/v1",
+      version: "1.0",
+      badge_id: badgeId,
+      issuer: { org: ORG, unit: UNIT, contact: CONTACT },
+      badge: { name: "AI-Ready ID", criteria: CRITERIA, issued: ISSUED, expires: null },
+      learner: { identifier_type: "registry_id", identifier: badgeId },
+      evidence: [EVIDENCE_URL]
+    };
+
+    const blob = new Blob([JSON.stringify(badge, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), { href: url, download: 'AI-Ready-ID.json' });
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+  });
+</script>
